@@ -18,6 +18,37 @@ struct map
     int targetY, targetX;
 };
 
+struct mapRobot
+{
+    int status, locationY, locationX, target;
+    mapRobot *left, *right, *parent, *faceDirection;
+};
+
+// Khởi tạo cây từ map
+void iNit(mapRobot *&mapRobot) {
+    mapRobot = NULL;
+}
+
+// Khởi tạo Node
+mapRobot* getNode(int status) {
+    mapRobot* p = new mapRobot;
+    if (p == NULL) {
+        return NULL;
+    }
+    p->status = status;
+    p->locationY = p->locationX = p->target = 0;
+    p->left = p->right = p->parent = p->faceDirection = NULL;
+    return p;
+}
+
+// Khởi tạo cây từ Map
+int creatMap_NoRecursion(mapRobot *&mapRobot, map Map) {
+    if (mapRobot == NULL) {
+        mapRobot = getNode(status);
+    }
+    
+}
+
 void docFileInput(string tenFile, map &Map) {
     ifstream fileIn;
     fileIn.open(tenFile, ios_base::in);
@@ -57,14 +88,9 @@ void docFileInput(string tenFile, map &Map) {
 int main() {
     map Map;
     docFileInput("/Users/phamhungdung/CoDe/C:C++/Robot_Tim_Duong/input.txt", Map); // Có câp phát bộ nhớ cho con trỏ cấp 2 Map.location
-    cout << "\n" << Map.numRow << " " << Map.numCol << endl;
-    for (int i = 0; i < Map.numRow; i++) {
-        for(int j = 0; j < Map.numCol; j++) {
-            cout << Map.location[i][j] << " ";
-        }
-        cout << endl;
-    }
-    cout << Map.targetY << " " << Map.targetX << endl;
+    
+    mapRobot *mapRobot;
+    iNit(mapRobot);
     
     // Trước khi kết thúc chương trình phải giải phóng bộ nhớ đã cấp phát cho con trỏ cấp 2 Map.location
     for( int i = 0; i < Map.numRow; i++) {
