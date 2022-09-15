@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -18,295 +19,28 @@ struct map
     int targetY, targetX;
 };
 
-//struct mapRobot
-//{
-//    int status, locationY, locationX, target;
-//    mapRobot *left, *right, *parent;
-//    char faceDirection;
-//};
-
 struct bot
 {
     int locationY, locationX;
     bot *left, *right, *parent;
     char faceDirection;
+    int thuTuDuyet = 0;
 };
-
-// Robot đi thẳng
-bot* goHead(bot *&robot, char faceDirection) {
-    bot *q = new bot;
-    switch (faceDirection) {
-        case 's':
-            q->locationY = robot->locationY++;
-            q->locationX = robot->locationX;
-            q->faceDirection = 's';
-            break;
-        case 'd':
-            q->locationY = robot->locationY;
-            q->locationX = robot->locationX++;
-            q->faceDirection = 'd';
-            break;
-        case 'w':
-            q->locationY = robot->locationY--;
-            q->locationX = robot->locationX;
-            q->faceDirection = 'w';
-            break;
-        case 'a':
-            q->locationY = robot->locationY;
-            q->locationX = robot->locationX--;
-            q->faceDirection = 'a';
-            break;
-    }
-    q->left = q->right = NULL;
-    q->parent = robot;
-    robot->left = q;
-    
-    return q;
-}
-
-// Robot rẽ trái
-bot* goLeft(bot *&robot, char faceDirection) {
-    bot *q = new bot;
-    switch (faceDirection) {
-        case 's':
-            q->locationY = robot->locationY;
-            q->locationX = robot->locationX++;
-            q->faceDirection = 'd';
-            break;
-        case 'd':
-            q->locationY = robot->locationY--;
-            q->locationX = robot->locationX;
-            q->faceDirection = 'a';
-            break;
-        case 'w':
-            q->locationY = robot->locationY;
-            q->locationX = robot->locationX--;
-            q->faceDirection = 'a';
-            break;
-        case 'a':
-            q->locationY = robot->locationY++;
-            q->locationX = robot->locationX;
-            q->faceDirection = 's';
-            break;
-    }
-    q->left = q->right = NULL;
-    q->parent = robot;
-    robot->right = q;
-    
-    return q;
-}
-
-// Cho Robot tìm đường
-void robotFindWay_NoRecursion(bot *botStart, map Map) {
-    // Khởi tạo robot bắt đầu đi từ gốc map
-    botStart->locationY = 0;
-    botStart->locationX = 0;
-    botStart->parent= botStart->left = botStart->right = NULL;
-    botStart->faceDirection = 's';
-    
-    // Robot bắt đầu tim đường
-    bot *p = botStart;
-    while (true) {
-        p = goHead(p, p->faceDirection);
-        p = goLeft(p, p->faceDirection);
-    }
-}
-
-//// Khởi tạo cây từ map
-//void iNit(mapRobot *&mapRobot) {
-//    mapRobot = NULL;
-//}
-//
-//// Khởi tạo Node
-//mapRobot* getNode(int status) {
-//    mapRobot* p = new mapRobot;
-//    if (p == NULL) {
-//        return NULL;
-//    }
-//    p->status = status;
-//    p->locationY = p->locationX = p->target = 0;
-//    p->left = p->right = p->parent = NULL;
-//    p->faceDirection = 's';
-//    return p;
-//}
-//
-//// Khởi tạo cây từ Map
-//void creatMap_NoRecursion(mapRobot *&mapTree, map Map) {
-//    mapRobot *p = NULL;
-//    mapRobot *q = mapTree;
-//    for (int i = 0; i < Map.numRow; i++) {
-//        q = getNode(Map.location[i][0]);
-//        q->locationY = i;
-//        q->locationX = 0;
-//        if (q->locationY == Map.targetY && q->locationX == Map.targetX) {
-//            q->target = 1;
-//        }
-//        q->parent = p;
-//        p = q;
-//        mapRobot *k = q;
-//        //cout << "\n" << q->status << "(" << q->locationY << "," << p->locationX << ";" << q->target << ")" << " ";
-//        q = q->right;
-//        for (int j = 1; j < Map.numCol; j++) {
-//            q = getNode(Map.location[i][j]);
-//            q->locationY = i;
-//            q->locationX = j;
-//            if (q->locationY == Map.targetY - 1 && q->locationX == Map.targetX - 1) {
-//                q->target = 1;
-//            }
-//            q->parent = p;
-//            p = q;
-//            //cout << q->status << "(" << q->locationY << "," << p->locationX << ";" << q->target << ")" << " ";
-//            q = q->right;
-//        }
-//        q = k->left;
-//        p = k;
-//    }
-//}
-//
-//// Tìm vị trí trên Map
-//mapRobot* findLocation(mapRobot *mapTree, int locationY, int locationX) {
-//    mapRobot *p = mapTree;
-//    while (p != NULL) {
-//        mapRobot *q = p;
-//        while (p != NULL) {
-//            if (p->locationY == locationY && p->locationX == locationX) {
-//                return p;
-//            }
-//            p = p->right;
-//        }
-//        p = q->left;
-//    }
-//    return p;
-//}
-//
-//// Robot đi thẳng
-//mapRobot* goHead(mapRobot *mapTree, mapRobot *robot, char faceDirection) {
-//    switch (faceDirection) {
-//        case 's':
-//            if (robot->left == NULL || robot->status == 1) {
-//                return NULL;
-//            }
-//            else {
-//                return robot->left;
-//            }
-//            break;
-//
-//        case 'd':
-//            if (robot->right == NULL || robot->status == 1) {
-//                return NULL;
-//            }
-//            else {
-//                return robot->right;
-//            }
-//            break;
-//        case 'w':
-//            mapRobot *p = findLocation(mapTree, robot->locationY - 1, robot->locationX);
-//            if (p == NULL || p->status == 1) {
-//                return NULL;
-//            }
-//            else {
-//                return p;
-//            }
-//            break;
-//    }
-//}
-//
-//// Cho Robot tìm đường
-//void robot_NoRecursion(mapRobot *mapTree) {
-//    mapRobot *robot = mapTree;
-//    while (true) {
-//        if (robot->faceDirection == 's') {
-//            // Đi thẳng
-//            if (robot->left == NULL) {
-//
-//            }
-//            robot = robot->left;
-//            robot->faceDirection = 's';
-//            // Rẽ trái
-//            robot = robot->right;
-//            robot->faceDirection = 'd';
-//        }
-//        else if (robot->faceDirection == 'd') {
-//            // Đi thẳng
-//            robot = robot->right;
-//            robot->faceDirection = 'd';
-//            // Rẽ trái
-//            robot = robot->right;
-//            robot->faceDirection = 'w';
-//        }
-//        else if (robot->faceDirection == 'd') {
-//            // Đi thẳng
-//            robot = robot->right;
-//            robot->faceDirection = 'd';
-//            // Rẽ trái
-//            robot = robot->right;
-//            robot->faceDirection = 'w';
-//        }
-//        else if (robot->faceDirection == 'd') {
-//            // Đi thẳng
-//            robot = robot->right;
-//            robot->faceDirection = 'd';
-//            // Rẽ trái
-//            robot = robot->right;
-//            robot->faceDirection = 'w';
-//        }
-//    }
-//}
-//
-//// Giải phóng Map
-//void deleteMap_NoRecursion(mapRobot *&mapTree) {
-//    if (mapTree != NULL) {
-//        mapRobot *parentRow = NULL;
-//        mapRobot *q = mapTree;
-//        while (true) {
-//            if (q->left != NULL) {
-//                q = q->left;
-//            }
-//            else {
-//                mapRobot *firstRow = q;
-//                mapRobot *parentCol = NULL;
-//                while (true) {
-//                    if (q->right != NULL) {
-//                        q = q->right;
-//                    }
-//                    else {
-//                        parentCol = q->parent;
-//                        delete q;
-//                        if (parentCol == firstRow) {
-//                            break;
-//                        }
-//                        else {
-//                            q = parentCol;
-//                        }
-//                    }
-//                }
-//                parentRow = q->parent;
-//                delete q;
-//                if (parentRow == NULL) {
-//                    break;
-//                }
-//                else {
-//                    q = parentRow;
-//                }
-//            }
-//        }
-//    }
-//}
 
 void docFileInput(string tenFile, map &Map) {
     ifstream fileIn;
-    fileIn.open(tenFile, ios_base::in);
+    fileIn.open(tenFile, ios::in);
     
     if(!fileIn)
     {
-        cout << "\nKhong tim thay tap tin " << tenFile;
+        cout << "Không tìm thấy tập tin: " << tenFile;
         fileIn.close();
         return;
     }
     
     // Nếu vẫn chạy được xuống dưới đây tức là có tồn tại tập tin => đọc dữ liệu vào cây
     //int dem = 0;
-    cout << "\nDu lieu trong tap tin " << tenFile << " da duoc doc thanh cong";
+    cout << "Dữ liệu trong tập tin " << tenFile << " đã được đọc thành công";
     
     fileIn >> Map.numRow;
     fileIn >> Map.numCol;
@@ -327,17 +61,207 @@ void docFileInput(string tenFile, map &Map) {
     fileIn.close();
 }
 
+void ghiFileOutput(string tenFile, vector<string> outPut) {
+    ofstream fileOut;
+    fileOut.open(tenFile, ios::out);
+    
+    fileOut << to_string(outPut.size()) << endl;
+    while (!outPut.empty()) {
+        fileOut << outPut.back() << endl;
+        outPut.pop_back();
+    }
+    
+    fileOut.close();
+}
 
+// Robot đi thẳng
+bot* goHead(bot *&robot) {
+    bot *q = new bot;
+    switch (robot->faceDirection) {
+        case 's':
+            q->locationY = robot->locationY + 1;
+            q->locationX = robot->locationX;
+            q->faceDirection = 's';
+            break;
+        case 'd':
+            q->locationY = robot->locationY;
+            q->locationX = robot->locationX + 1;
+            q->faceDirection = 'd';
+            break;
+        case 'w':
+            q->locationY = robot->locationY - 1;
+            q->locationX = robot->locationX;
+            q->faceDirection = 'w';
+            break;
+        case 'a':
+            q->locationY = robot->locationY;
+            q->locationX = robot->locationX - 1;
+            q->faceDirection = 'a';
+            break;
+    }
+    q->left = q->right = NULL;
+    q->parent = robot;
+    robot->left = q;
+    
+    return q;
+}
+
+// Robot rẽ trái
+bot* goLeft(bot *&robot) {
+    bot *q = new bot;
+    switch (robot->faceDirection) {
+        case 's':
+            q->locationY = robot->locationY;
+            q->locationX = robot->locationX + 1;
+            q->faceDirection = 'd';
+            break;
+        case 'd':
+            q->locationY = robot->locationY - 1;
+            q->locationX = robot->locationX;
+            q->faceDirection = 'a';
+            break;
+        case 'w':
+            q->locationY = robot->locationY;
+            q->locationX = robot->locationX - 1;
+            q->faceDirection = 'a';
+            break;
+        case 'a':
+            q->locationY = robot->locationY + 1;
+            q->locationX = robot->locationX;
+            q->faceDirection = 's';
+            break;
+    }
+    q->left = q->right = NULL;
+    q->parent = robot;
+    robot->right = q;
+    
+    return q;
+}
+
+// Kiểm tra trùng
+bool testDuplicate(bot *botTest, bot *botStart) {
+    bot *p = botStart;
+    string s = "NLR";
+    int duplicate = 0;
+    while (true) {
+        if (p->thuTuDuyet <= 2) {
+            if (s[p->thuTuDuyet] == 'N') {
+                if (p->locationY == botTest->locationY && p->locationX == botTest->locationX && p->faceDirection == botTest->faceDirection) {
+                    duplicate++;
+                }
+                p->thuTuDuyet++;
+            }
+            else if (s[p->thuTuDuyet] == 'L')
+            {
+                p->thuTuDuyet++;
+                if (p->left != NULL) {
+                    p = p->left;
+                }
+            }
+            else if (s[p->thuTuDuyet] == 'R')
+            {
+                p->thuTuDuyet++;
+                if (p->right != NULL) {
+                    p = p->right;
+                }
+            }
+        }
+        else {
+            p->thuTuDuyet = 0;
+            p = p->parent;
+            if (p == NULL) {  //Dieu Kien Dung
+                break;
+            }
+        }
+    }
+    
+    if (duplicate == 1) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+// Cho Robot tìm đường
+void robotFindWay_NoRecursion(bot *botStart, map Map) {
+    // Khởi tạo robot bắt đầu đi từ gốc map
+    botStart->locationY = 0;
+    botStart->locationX = 0;
+    botStart->parent= botStart->left = botStart->right = NULL;
+    botStart->faceDirection = 's';
+    
+    // Robot bắt đầu tim đường
+    bot *p = botStart;
+    while (true) {
+        bot *q = NULL;
+        if (p->left == NULL) {
+            q = goHead(p);
+        }
+        else if (p->right == NULL) {
+            q = goLeft(p);
+        }
+        else if (p->left != NULL && p->right != NULL) {
+            p = p->parent;
+            continue;
+        }
+        
+        if (q->locationY < 0 || q->locationY >= Map.numRow || q->locationX < 0 || q->locationX >= Map.numCol) {
+            // Robot đi ra ngoài Map, quay lại vị trí trước
+            p = q->parent;
+        }
+        else {
+            // Robot vẫn ở trong Map
+            if (Map.location[q->locationY][q->locationX] == 0) {
+                // Robot ko đụng vật cản, xét có phải là đích ko
+                if (q->locationY == Map.targetY - 1 && q->locationX == Map.targetX - 1) {
+                    // Là đích thì xuất kết quả
+                    vector<string> outPut;
+                    while (q != NULL) {
+                        outPut.push_back(to_string(q->locationY + 1) + " " + to_string(q->locationX + 1));
+                        q = q->parent;
+                    }
+                    ghiFileOutput("/Users/phamhungdung/CoDe/C:C++/Robot_Tim_Duong/output.txt", outPut);
+                    cout << "\nGhi File kết quả thành công" << endl;
+                    return;
+                }
+                else {
+                    // Ko là đích, xét vị trí này đã đi chưa
+                    if (testDuplicate(q, botStart) == true) {
+                        // Đã đi vị trí này, quay lại vị trí trước
+                        p = q->parent;
+                    }
+                    else {
+                        // Chưa đi vị trí này, đi tiếp
+                        p = q;
+                    }
+                }
+            }
+            else if (Map.location[q->locationY][q->locationX] == 1) {
+                // Robot đụng vật cản, quay lại vị trí trước
+                p = q->parent;
+            }
+        }
+    }
+}
 
 int main() {
     map Map;
-    docFileInput("/Users/phamhungdung/CoDe/C:C++/Robot_Tim_Duong/input.txt", Map); // Có câp phát bộ nhớ cho con trỏ cấp 2 Map.location
+    docFileInput("/Users/phamhungdung/CoDe/C:C++/Robot_Tim_Duong/input1.txt", Map); // Có câp phát bộ nhớ cho con trỏ cấp 2 Map.location
     
-//    mapRobot *mapRobot;
-//    iNit(mapRobot);
-//    creatMap_NoRecursion(mapRobot, Map);
+    cout << "\n\nSố hàng và cột của map: " << Map.numRow << "x" << Map.numCol;
+    cout << "\n\nMap: ";
+    for (int i = 0; i < Map.numRow; i++) {
+        for (int j = 0; j < Map.numCol; j++) {
+            cout << Map.location[i][j] << " ";
+        }
+        cout << "\n     ";
+    }
+    cout << "\nVị trí đích: (" << Map.targetY << "," << Map.targetX << ")";
     
+    bot *botStart = new bot;
     
+    robotFindWay_NoRecursion(botStart, Map);
     
     // Trước khi kết thúc chương trình phải giải phóng bộ nhớ đã cấp phát cho con trỏ cấp 2 Map.location
     for( int i = 0; i < Map.numRow; i++) {
@@ -346,7 +270,7 @@ int main() {
     delete[] Map.location;
     
     // Giải phóng cây
-    deleteMap_NoRecursion(mapRobot);
+    delete botStart;
     
     return 0;
 }
