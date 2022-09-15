@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		74CA282528D0B62A00951C2F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 74CA282428D0B62A00951C2F /* main.cpp */; };
+		748976F928D2CDD7003D5AEA /* map_2Direction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 748976F828D2CDD7003D5AEA /* map_2Direction.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +23,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		748976F828D2CDD7003D5AEA /* map_2Direction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = map_2Direction.cpp; sourceTree = "<group>"; };
 		74CA282128D0B62A00951C2F /* Robot_Tim_Duong */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Robot_Tim_Duong; sourceTree = BUILT_PRODUCTS_DIR; };
-		74CA282428D0B62A00951C2F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		74CA282D28D0CF0300951C2F /* input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = input.txt; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -59,7 +59,7 @@
 		74CA282328D0B62A00951C2F /* Robot_Tim_Duong */ = {
 			isa = PBXGroup;
 			children = (
-				74CA282428D0B62A00951C2F /* main.cpp */,
+				748976F828D2CDD7003D5AEA /* map_2Direction.cpp */,
 			);
 			path = Robot_Tim_Duong;
 			sourceTree = "<group>";
@@ -121,7 +121,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				74CA282528D0B62A00951C2F /* main.cpp in Sources */,
+				748976F928D2CDD7003D5AEA /* map_2Direction.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
