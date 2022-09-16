@@ -194,6 +194,12 @@ void robotFindWay_NoRecursion(bot *botStart, map Map) {
     // Robot bắt đầu tim đường
     bot *p = botStart;
     while (true) {
+        if (p == NULL) {
+            vector<string> outPut;
+            ghiFileOutput("/Users/phamhungdung/CoDe/C:C++/Robot_Tim_Duong/output.txt", outPut);
+            cout << "\nGhi File kết quả thành công" << endl;
+            return;
+        }
         bot *q = NULL;
         if (p->left == NULL) {
             q = goHead(p);
@@ -247,7 +253,7 @@ void robotFindWay_NoRecursion(bot *botStart, map Map) {
 
 int main() {
     map Map;
-    docFileInput("/Users/phamhungdung/CoDe/C:C++/Robot_Tim_Duong/input1.txt", Map); // Có câp phát bộ nhớ cho con trỏ cấp 2 Map.location
+    docFileInput("/Users/phamhungdung/CoDe/C:C++/Robot_Tim_Duong/input3.txt", Map); // Có câp phát bộ nhớ cho con trỏ cấp 2 Map.location
     
     cout << "\n\nSố hàng và cột của map: " << Map.numRow << "x" << Map.numCol;
     cout << "\n\nMap: ";
